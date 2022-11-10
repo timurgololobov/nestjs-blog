@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UploadedFile,
+  Render,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,6 +22,7 @@ import { diskStorage } from 'multer';
 import { HelperFileLoader } from 'src/utility/HelperFileLoader';
 import { LoggingInterceptor } from 'src/common/middleware/logging.interceptor';
 import { v4 as uuidv4 } from 'uuid';
+import { MailService } from '../mail/mail.service';
 
 // const helperFileLoader = new HelperFileLoader();
 // helperFileLoader.path = '/news';
@@ -35,6 +37,7 @@ export class NewsController {
   constructor(
     private readonly newsService: NewsService,
     private readonly commentService: CommentsService,
+    private mailService: MailService,
   ) {}
 
   // @Post()
@@ -53,6 +56,7 @@ export class NewsController {
   }
 
   @Get('/:id')
+  @Render('news')
   async findNews(@Param() params: NewsIdDto): Promise<News | undefined> {
     return this.newsService.findNews(params.id);
   }
@@ -118,10 +122,22 @@ export class NewsController {
       coverPath = PATH_NEWS + cover[0].filename;
     }
 
-    return this.newsService.create({
+    const _news = this.newsService.create({
       ...news,
       id: uuidv4(),
       cover: coverPath,
     });
+
+    await this.mailService.sendNewNewsForAdmins(
+      ['snezhkinv@yandex.ru', 'snezhkinv20@gmail.com'],
+      await _news,
+    );
+    return _news;
+
+    // return this.newsService.create({
+    //   ...news,
+    //   id: uuidv4(),
+    //   cover: coverPath,
+    // });
   }
 }

@@ -10,6 +10,7 @@ const allNews: News[] = [
       'Эксперт настроен очень оптимистично. По его словам, в течение шести лет цифровая валюта увеличится в цене в 100 раз.',
     author: 'Pushkin',
     createdAt: new Date(Date.now()),
+    cover: 'news-static/3a449395-181e-498b-86cb-c299147cf230.jpg',
     comments: [],
   },
   {
@@ -19,6 +20,7 @@ const allNews: News[] = [
       'Так что без лишних слов и лирических отступлений на технические характеристики расскажем об эмоциях от использования',
     author: 'Pushkin',
     createdAt: new Date(Date.now()),
+    cover: 'news-static/3a449395-181e-498b-86cb-c299147cf230.jpg',
     comments: [],
   },
 ];
@@ -37,8 +39,9 @@ export class NewsService {
     }
   }
 
-  async create(news: NewsCreateDto): Promise<number> {
-    return allNews.push(news);
+  async create(news: NewsCreateDto): Promise<News | undefined> {
+    await allNews.push(news);
+    return news;
   }
 
   async findNews(id: string): Promise<News | undefined> {
