@@ -7,13 +7,13 @@ import { CommentUpdateDto } from './dtos/comment-update.dto';
 @Injectable()
 export class CommentsService {
   private readonly comments = {
-    1: [
+    qwe: [
       {
-        id: 1,
+        id: '1',
         text: 'text',
       },
       {
-        id: 2,
+        id: '2',
         text: 'text second',
       },
     ],
